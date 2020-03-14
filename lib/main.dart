@@ -4,7 +4,7 @@ import 'package:solitaire/utils/round_handler.dart';
 void main() {
   RoundHandler roundHandler = RoundHandler();
   roundHandler.initDeck();
-  print(roundHandler.cardColumn2[0]);
+  print(roundHandler.cardColumns[6][6]);
 
   runApp(MyApp());
 }

@@ -13,19 +13,17 @@ class RoundHandler {
   List<Card> spadeSuit = [];
   List<Card> clubSuit = [];
 
-  List<Card> cardColumn1 = [];
-  List<Card> cardColumn2 = [];
-  List<Card> cardColumn3 = [];
-  List<Card> cardColumn4 = [];
-  List<Card> cardColumn5 = [];
-  List<Card> cardColumn6 = [];
-  List<Card> cardColumn7 = [];
+  // 7 columns containing 28 random cards in total
+  List<List<Card>> cardColumns = List(7);
 
-  RoundHandler() {}
+  RoundHandler() {
+    for (int i = 0; i < 7; i++) cardColumns[i] = [];
+  }
 
   void initDeck() {
     createAllCards();
     putRandomCardsToColumns();
+    putRemainingCardsToDeck();
   }
 
   void createAllCards() {
@@ -38,21 +36,25 @@ class RoundHandler {
 
   void putRandomCardsToColumns() {
     Random ran = Random();
+    Card card;
 
-    // col 1
-    Card card = allCards.removeAt(ran.nextInt(allCards.length));
-    cardColumn1.add(card);
-    cardColumn1.last
-      ..opened = true
-      ..faceUp = true;
-
-    // col 2
-    for (int i = 0; i < 2; i++) {
-      Card card = allCards.removeAt(ran.nextInt(allCards.length));
-      cardColumn2.add(card);
+    for (int i = 0; i < 7; i++) {
+      // 7 columns
+      for (int j = 0; j <= i; j++) {
+        // cards in each column
+        card = allCards.removeAt(ran.nextInt(allCards.length));
+        cardColumns[i].add(card);
+      }
+      cardColumns[i].last
+        ..faceUp = true
+        ..opened = true;
     }
-    cardColumn2.last
+  }
+
+  void putRemainingCardsToDeck() {
+    deckClosed = allCards; // 24 remaining cards
+    deckOpened.add(deckClosed.removeLast()
       ..opened = true
-      ..faceUp = true;
+      ..faceUp = true);
   }
 }

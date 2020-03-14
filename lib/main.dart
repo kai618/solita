@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:solitaire/utils/round_handler.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  RoundHandler roundHandler = RoundHandler();
+  roundHandler.initDeck();
+  print(roundHandler.cardColumn2[0]);
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -17,7 +24,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text("Hi"),
+      body: Center(child: Text("Hi")),
     );
   }
 }

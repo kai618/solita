@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum CardSuit { spades, hearts, diamonds, clubs }
 
-enum CardRank { one, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king }
+enum CardRank { ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king }
 
 enum CardColor { red, black }
 
@@ -19,7 +19,7 @@ class Card {
     this.opened = false,
   });
 
-  CardColor get cardColor {
+  CardColor get color {
     if (suit == CardSuit.hearts || suit == CardSuit.diamonds) {
       return CardColor.red;
     } else {
@@ -28,7 +28,5 @@ class Card {
   }
 
   @override
-  String toString() {
-    return "suit:$suit rank:$rank up:$faceUp opened:$opened";
-  }
+  String toString() => "suit:$suit rank:$rank up:$faceUp opened:$opened";
 }

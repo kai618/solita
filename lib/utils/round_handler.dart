@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:solitaire/card.dart';
+import 'package:solitaire/widgets/card.dart';
 
 class RoundHandler {
   List<Card> allCards = [];
@@ -45,6 +45,7 @@ class RoundHandler {
         card = allCards.removeAt(ran.nextInt(allCards.length));
         cardColumns[i].add(card);
       }
+      // put the last card faced up
       cardColumns[i].last
         ..faceUp = true
         ..opened = true;

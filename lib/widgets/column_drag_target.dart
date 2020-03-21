@@ -24,7 +24,7 @@ class ColumnDragTarget extends StatelessWidget {
         onWillAccept: (data) => CardRule.isCardsAcceptedToColumn(cards, data["cards"]),
         onAccept: (data) => onCardsAdded(data["fromColumnIndex"], columnIndex, data["cards"]),
         builder: (context, dedicates, rejects) => Container(
-          height: 100,
+          height: 120,
           width: 40,
 //          color: Colors.red.withOpacity(0.5),
         ),

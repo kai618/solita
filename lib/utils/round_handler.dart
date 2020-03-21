@@ -79,7 +79,7 @@ class RoundHandler {
     if (from != -1) {
       // one card added from columns
       suitPiles[index].add(cardColumns[from].removeLast());
-      cardColumns[from].last.faceUp = true;
+      if (cardColumns[from].isNotEmpty) cardColumns[from].last.faceUp = true;
     } else
       // one card added from drawing deck
       suitPiles[index].add(deckOpened.removeLast());

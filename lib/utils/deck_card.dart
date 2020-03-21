@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum CardSuit { spades, hearts, diamonds, clubs }
+enum CardSuit { hearts, diamonds, spades, clubs }
 
 extension CardSuitMethod on CardSuit {
   String get string {

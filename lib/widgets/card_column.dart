@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:solitaire/utils/constant.dart';
 import 'package:solitaire/utils/deck_card.dart';
-import 'package:solitaire/widgets/car_column_tray.dart';
+import 'package:solitaire/widgets/card_tray.dart';
 import 'package:solitaire/widgets/draggable_card.dart';
 import 'package:solitaire/widgets/column_drag_target.dart';
 
@@ -13,13 +13,18 @@ class CardColumn extends StatefulWidget {
   final Function onCardsAdded;
   final int columnIndex;
 
-  CardColumn({this.cards, this.onCardsAdded, this.columnIndex});
+  CardColumn({
+    Key key,
+    @required this.cards,
+    @required this.onCardsAdded,
+    @required this.columnIndex,
+  }) : super(key: key);
 
   @override
-  _CardColumnState createState() => _CardColumnState();
+  CardColumnState createState() => CardColumnState();
 }
 
-class _CardColumnState extends State<CardColumn> {
+class CardColumnState extends State<CardColumn> {
   int lastVisibleCardIndex;
 
   @override
@@ -42,7 +47,7 @@ class _CardColumnState extends State<CardColumn> {
       constraints:
           BoxConstraints(minHeight: (widget.cards.length - 1) * Constant.dy + Constant.cardHeight),
       child: Stack(children: <Widget>[
-        CardColumnTray(),
+        CardTray(),
         ...buildDraggableCardPile(),
         buildTargetArea(),
       ]),
@@ -76,7 +81,6 @@ class _CardColumnState extends State<CardColumn> {
       cards: widget.cards,
       columnIndex: widget.columnIndex,
       onCardsAdded: widget.onCardsAdded,
-      onDragEnd: onDragEnd,
     );
   }
 }

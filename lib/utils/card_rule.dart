@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:solitaire/utils/deck_card.dart';
 
 class CardRule {
@@ -19,7 +22,18 @@ class CardRule {
     return false;
   }
 
-  static bool isCardsAcceptedToSuit() {
+  static bool isCardsAcceptedToSuit(
+      CardSuit suit, List<DeckCard> toPile, List<DeckCard> fromCards) {
+    if (fromCards.length == 1 && fromCards.first.suit == suit) {
+      if (toPile.isEmpty) {
+        if (fromCards.first.rank == CardRank.ace) return true;
+        return false;
+      } else {
+        int pileRankIndex = CardRank.values.indexOf(toPile.last.rank);
+        int cardRankIndex = CardRank.values.indexOf(fromCards.first.rank);
+        if (cardRankIndex == pileRankIndex + 1) return true;
+      }
+    }
     return false;
   }
 }

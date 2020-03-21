@@ -8,23 +8,21 @@ class RoundHandler {
   List<DeckCard> deckClosed = [];
   List<DeckCard> deckOpened = [];
 
-  List<DeckCard> heartSuit = [];
-  List<DeckCard> diamondSuit = [];
-  List<DeckCard> spadeSuit = [];
-  List<DeckCard> clubSuit = [];
-
   // 7 columns containing 28 random cards in total
   List<List<DeckCard>> cardColumns = List(7);
 
+  // 4 final suits
+  List<List<DeckCard>> suitPiles = List(4);
+
   RoundHandler() {
     for (int i = 0; i < 7; i++) cardColumns[i] = [];
+    for (int i = 0; i < 4; i++) suitPiles[i] = [];
   }
 
   void initDeck() {
     createAllCards();
     putRandomCardsToColumns();
     putRemainingCardsToDeckRandomly();
-    print(deckClosed.length);
   }
 
   void createAllCards() {
@@ -75,5 +73,15 @@ class RoundHandler {
     }
   }
 
-  void onCardsAddedToSuit() {}
+  void onCardAddedToSuit(CardSuit suit, int from) {
+    int index = CardSuit.values.indexOf(suit);
+
+    if (from != -1) {
+      // one card added from columns
+      suitPiles[index].add(cardColumns[from].removeLast());
+      cardColumns[from].last.faceUp = true;
+    } else
+      // one card added from drawing deck
+      suitPiles[index].add(deckOpened.removeLast());
+  }
 }

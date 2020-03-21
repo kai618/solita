@@ -27,13 +27,18 @@ class DraggableCard extends StatelessWidget {
     return Draggable<Map>(
       child: FacingUpCard(card),
       feedback: Material(
+        elevation: 3,
         color: Colors.transparent,
+        borderRadius: BorderRadius.circular(Constant.cardRadius),
         child: SimpleCardColumn(attachedCards),
       ),
       childWhenDragging: Container(),
       onDragStarted: () => onDragStarted(index),
       onDragEnd: (_) => onDragEnd(),
-      data: {"cards": attachedCards, "fromColumnIndex": columnIndex},
+      data: {
+        "cards": attachedCards,
+        "fromColumnIndex": columnIndex,
+      },
     );
   }
 }

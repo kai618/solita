@@ -7,7 +7,10 @@ class CardColumnTray extends StatelessWidget {
     return Container(
       height: Constant.cardHeight,
       width: Constant.cardWidth,
-      color: Colors.greenAccent,
+      decoration: BoxDecoration(
+        color: Colors.lime,
+        borderRadius: BorderRadius.all(Radius.circular(Constant.cardRadius)),
+      ),
     );
   }
 }

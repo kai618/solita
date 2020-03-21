@@ -23,7 +23,8 @@ class RoundHandler {
   void initDeck() {
     createAllCards();
     putRandomCardsToColumns();
-    putRemainingCardsToDeck();
+    putRemainingCardsToDeckRandomly();
+    print(deckClosed.length);
   }
 
   void createAllCards() {
@@ -35,7 +36,7 @@ class RoundHandler {
   }
 
   void putRandomCardsToColumns() {
-    Random ran = Random();
+    final Random ran = Random();
     DeckCard card;
 
     for (int i = 0; i < 7; i++) {
@@ -50,8 +51,29 @@ class RoundHandler {
     }
   }
 
-  void putRemainingCardsToDeck() {
-    deckClosed = allCards; // 24 remaining cards
-    deckOpened.add(deckClosed.removeLast()..faceUp = true);
+  void putRemainingCardsToDeckRandomly() {
+    final Random ran = Random();
+    DeckCard card;
+
+    while (allCards.length > 1) {
+      card = allCards.removeAt(ran.nextInt(allCards.length));
+      deckClosed.add(card);
+    }
+    deckOpened.add(allCards.first..faceUp = true);
   }
+
+  void onCardsAddedToColumn(List<DeckCard> cards, int toIndex, [int fromIndex = -1]) {
+    cardColumns[toIndex].addAll(cards);
+    if (fromIndex != -1) {
+      // cards from other columns
+      var oldColumn = cardColumns[fromIndex];
+      oldColumn.removeRange(oldColumn.length - cards.length, oldColumn.length);
+      if (oldColumn.isNotEmpty) oldColumn.last.faceUp = true;
+    } else {
+      // card from drawing area
+      deckOpened.removeLast();
+    }
+  }
+
+  void onCardsAddedToSuit() {}
 }

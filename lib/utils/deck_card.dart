@@ -2,31 +2,9 @@ import 'package:flutter/material.dart';
 
 enum CardSuit { spades, hearts, diamonds, clubs }
 
-enum CardRank { ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king }
-
-enum CardColor { red, black }
-
-class DeckCard {
-  CardSuit suit;
-  CardRank rank;
-  bool faceUp;
-
-  DeckCard({
-    @required this.suit,
-    @required this.rank,
-    this.faceUp = false,
-  });
-
-  CardColor get color {
-    if (suit == CardSuit.hearts || suit == CardSuit.diamonds) {
-      return CardColor.red;
-    } else {
-      return CardColor.black;
-    }
-  }
-
-  String get suitName {
-    switch (suit) {
+extension CardSuitMethod on CardSuit {
+  String get string {
+    switch (this) {
       case CardSuit.spades:
         return "\u2660";
       case CardSuit.hearts:
@@ -39,9 +17,13 @@ class DeckCard {
         return "error";
     }
   }
+}
 
-  String get rankName {
-    switch (rank) {
+enum CardRank { ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king }
+
+extension CardRankMethod on CardRank {
+  String get string {
+    switch (this) {
       case CardRank.ace:
         return "A";
       case CardRank.two:
@@ -70,6 +52,28 @@ class DeckCard {
         return "K";
       default:
         return "Joker";
+    }
+  }
+}
+
+enum CardColor { red, black }
+
+class DeckCard {
+  CardSuit suit;
+  CardRank rank;
+  bool faceUp;
+
+  DeckCard({
+    @required this.suit,
+    @required this.rank,
+    this.faceUp = false,
+  });
+
+  CardColor get color {
+    if (suit == CardSuit.hearts || suit == CardSuit.diamonds) {
+      return CardColor.red;
+    } else {
+      return CardColor.black;
     }
   }
 

@@ -4,7 +4,9 @@ import 'package:solitaire/utils/constant.dart';
 import 'package:solitaire/utils/deck_card.dart';
 import 'package:solitaire/widgets/car_column_tray.dart';
 import 'package:solitaire/widgets/draggable_card.dart';
-import 'package:solitaire/widgets/drag_target_area.dart';
+import 'package:solitaire/widgets/column_drag_target.dart';
+
+import 'facing_down_card.dart';
 
 class CardColumn extends StatefulWidget {
   final List<DeckCard> cards;
@@ -36,7 +38,6 @@ class _CardColumnState extends State<CardColumn> {
 
   @override
   Widget build(BuildContext context) {
-    print("build card column");
     return Container(
       constraints:
           BoxConstraints(minHeight: (widget.cards.length - 1) * Constant.dy + Constant.cardHeight),
@@ -51,20 +52,27 @@ class _CardColumnState extends State<CardColumn> {
   List<Widget> buildDraggableCardPile() {
     return widget.cards.map((card) {
       int index = widget.cards.indexOf(card);
-      return DraggableCard(
-        card: card,
-        index: index,
-        columnIndex: widget.columnIndex,
-        attachedCards: widget.cards.sublist(index),
+      return Visibility(
         visible: index <= lastVisibleCardIndex,
-        onDragStarted: onDragStarted,
-        onDragEnd: onDragEnd,
+        child: Transform.translate(
+          offset: Offset(0, index * Constant.dy),
+          child: card.faceUp
+              ? DraggableCard(
+                  card: card,
+                  index: index,
+                  columnIndex: widget.columnIndex,
+                  attachedCards: widget.cards.sublist(index),
+                  onDragStarted: onDragStarted,
+                  onDragEnd: onDragEnd,
+                )
+              : FacingDownCard(),
+        ),
       );
     }).toList();
   }
 
   Widget buildTargetArea() {
-    return DragTargetArea(
+    return ColumnDragTarget(
       cards: widget.cards,
       columnIndex: widget.columnIndex,
       onCardsAdded: widget.onCardsAdded,

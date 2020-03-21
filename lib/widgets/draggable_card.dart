@@ -9,38 +9,27 @@ class DraggableCard extends StatelessWidget {
   final int index; // index of the card in the column containing it
   final int columnIndex; // index of the column
   final DeckCard card; // card info
-  final double dy; // the distance translated in y axis
   final List<DeckCard> attachedCards; // cards below this card (inclusive)
-  final bool visible;
   final Function onDragStarted;
   final Function onDragEnd;
 
   DraggableCard({
-    this.index,
-    this.columnIndex,
+    this.index = 0,
+    this.columnIndex = -1,
     this.card,
-    this.dy = Constant.dy,
     this.attachedCards,
-    this.visible,
     this.onDragStarted,
     this.onDragEnd,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: visible,
-      child: Transform.translate(
-        offset: Offset(0, index * dy),
-        child: card.faceUp ? buildDraggableCard() : FacingDownCard(card),
-      ),
-    );
-  }
-
-  Widget buildDraggableCard() {
     return Draggable<Map>(
       child: FacingUpCard(card),
-      feedback: Material(child: SimpleCardColumn(cards: attachedCards, dy: dy)),
+      feedback: Material(
+        color: Colors.transparent,
+        child: SimpleCardColumn(attachedCards),
+      ),
       childWhenDragging: Container(),
       onDragStarted: () => onDragStarted(index),
       onDragEnd: (_) => onDragEnd(),

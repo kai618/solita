@@ -15,9 +15,10 @@ class FacingUpCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(Constant.cardRadius),
         ),
         child: Text(
-          "${card.rankName} ${card.suitName}",
+          "${card.rank.string} ${card.suit.string}",
           style: TextStyle(
             fontSize: 14,
             color: Colors.black,

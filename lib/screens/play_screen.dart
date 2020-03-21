@@ -27,7 +27,7 @@ class _PlayScreenState extends State<PlayScreen> {
 
   void onCardsAddedToColumn(int from, int to, List<DeckCard> cards) {
     setState(() => handler.onCardsAddedToColumn(cards, to, from));
-    if (from != -1) keys[to].currentState.onDragEnd();
+    keys[to].currentState.onDragEnd();
   }
 
   void onCardAddedToSuit(CardSuit suit, int from) {
@@ -46,20 +46,24 @@ class _PlayScreenState extends State<PlayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Column(
         children: <Widget>[
           Expanded(flex: 2, child: Container()),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Expanded(flex: 2, child: CardDrawingArea(handler.deckClosed, handler.deckOpened)),
-                Expanded(flex: 4, child: buildFinalSuitArea()),
+                Expanded(flex: 1, child: CardDrawingArea(handler.deckClosed, handler.deckOpened)),
+                const SizedBox(width: 10),
+                Expanded(flex: 2, child: buildFinalSuitArea()),
+                const SizedBox(width: 10),
               ],
             ),
           ),
-          Expanded(flex: 7, child: buildCardColumnArea()),
+          Expanded(flex: 14, child: buildCardColumnArea()),
         ],
       ),
       floatingActionButton: FloatingActionButton(onPressed: reset, child: Icon(Icons.refresh)),

@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Solitaire',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      title: 'Omnicard',
+      theme: ThemeData(primarySwatch: Colors.green),
       home: PlayScreen(),
     );
   }

@@ -12,7 +12,7 @@ extension CardSuitMethod on CardSuit {
       case CardSuit.diamonds:
         return "\u2666";
       case CardSuit.clubs:
-        return "\u2667";
+        return "\u2663";
       default:
         return "error";
     }

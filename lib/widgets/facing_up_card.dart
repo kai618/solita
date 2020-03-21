@@ -10,20 +10,47 @@ class FacingUpCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        padding: const EdgeInsets.all(3),
         height: Constant.cardHeight,
         width: Constant.cardWidth,
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(color: Colors.black),
+          border: Border.all(color: Colors.black, width: 0.7),
           borderRadius: BorderRadius.circular(Constant.cardRadius),
         ),
-        child: Text(
-          "${card.rank.string} ${card.suit.string}",
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black,
-            fontWeight: FontWeight.normal,
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Text(card.rank.string, style: TextStyle(fontSize: 10)),
+                const SizedBox(width: 2),
+                Text(
+                  card.suit.string,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color: (card.color == CardColor.black) ? Colors.black : Colors.red,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(card.rank.string, style: TextStyle(fontSize: 14)),
+                const SizedBox(height: 2),
+                Text(
+                  card.suit.string,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: (card.color == CardColor.black) ? Colors.black : Colors.red,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ));
   }
 }

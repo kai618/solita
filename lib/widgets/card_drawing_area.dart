@@ -38,7 +38,12 @@ class _CardDrawingAreaState extends State<CardDrawingArea> {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            GestureDetector(child: CardTray(), onTap: repeatCards),
+            GestureDetector(
+              child: CardTray(
+                child: Icon(Icons.refresh, color: Colors.white70, size: 30),
+              ),
+              onTap: repeatCards,
+            ),
             Visibility(
               visible: widget.deckClosed.isNotEmpty,
               child: GestureDetector(

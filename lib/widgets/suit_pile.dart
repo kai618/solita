@@ -19,7 +19,7 @@ class SuitPile extends StatelessWidget {
         children: <Widget>[
           Align(
             alignment: Alignment.topCenter,
-            child: (pile.isEmpty) ? CardTray() : FacingUpCard(pile.last),
+            child: (pile.isEmpty) ? buildSymbolTray() : FacingUpCard(pile.last),
           ),
           DragTarget<Map>(
             onWillAccept: (data) => CardRule.isCardsAcceptedToSuit(suit, pile, data["cards"]),
@@ -27,10 +27,21 @@ class SuitPile extends StatelessWidget {
             builder: (context, dedicates, rejects) => Container(
               height: 80,
               width: 50,
-//              color: Colors.red.withOpacity(0.5),
+//              color: Colors.red.withOpacity(0.3),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildSymbolTray() {
+    return CardTray(
+      child: Center(
+        child: Text(
+          suit.string,
+          style: TextStyle(fontSize: 25, color: Colors.white.withOpacity(0.5)),
+        ),
       ),
     );
   }

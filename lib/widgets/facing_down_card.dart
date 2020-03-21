@@ -9,10 +9,11 @@ class FacingDownCard extends StatelessWidget {
       height: Constant.cardHeight,
       width: Constant.cardWidth,
       decoration: BoxDecoration(
-        color: Colors.green,
-        border: Border.all(color: Colors.black),
+        color: Colors.green[700],
+        border: Border.all(color: Colors.black87,width: 0.7),
         borderRadius: BorderRadius.circular(Constant.cardRadius),
       ),
+      child: Icon(Icons.spa, color: Colors.lightGreen[600],size: 33,),
     );
   }
 }

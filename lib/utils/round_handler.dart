@@ -1,20 +1,20 @@
 import 'dart:math';
 
-import 'package:solitaire/widgets/card.dart';
+import 'package:solitaire/utils/deck_card.dart';
 
 class RoundHandler {
-  List<Card> allCards = [];
+  List<DeckCard> allCards = [];
 
-  List<Card> deckClosed = [];
-  List<Card> deckOpened = [];
+  List<DeckCard> deckClosed = [];
+  List<DeckCard> deckOpened = [];
 
-  List<Card> heartSuit = [];
-  List<Card> diamondSuit = [];
-  List<Card> spadeSuit = [];
-  List<Card> clubSuit = [];
+  List<DeckCard> heartSuit = [];
+  List<DeckCard> diamondSuit = [];
+  List<DeckCard> spadeSuit = [];
+  List<DeckCard> clubSuit = [];
 
   // 7 columns containing 28 random cards in total
-  List<List<Card>> cardColumns = List(7);
+  List<List<DeckCard>> cardColumns = List(7);
 
   RoundHandler() {
     for (int i = 0; i < 7; i++) cardColumns[i] = [];
@@ -29,14 +29,14 @@ class RoundHandler {
   void createAllCards() {
     CardSuit.values.forEach((suit) {
       CardRank.values.forEach((rank) {
-        allCards.add(Card(suit: suit, rank: rank));
+        allCards.add(DeckCard(suit: suit, rank: rank));
       });
     });
   }
 
   void putRandomCardsToColumns() {
     Random ran = Random();
-    Card card;
+    DeckCard card;
 
     for (int i = 0; i < 7; i++) {
       // 7 columns
@@ -46,16 +46,12 @@ class RoundHandler {
         cardColumns[i].add(card);
       }
       // put the last card faced up
-      cardColumns[i].last
-        ..faceUp = true
-        ..opened = true;
+      cardColumns[i].last..faceUp = true;
     }
   }
 
   void putRemainingCardsToDeck() {
     deckClosed = allCards; // 24 remaining cards
-    deckOpened.add(deckClosed.removeLast()
-      ..opened = true
-      ..faceUp = true);
+    deckOpened.add(deckClosed.removeLast()..faceUp = true);
   }
 }

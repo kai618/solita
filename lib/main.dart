@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:solitaire/utils/round_handler.dart';
+import 'package:flutter/services.dart';
+import 'package:solitaire/screens/play_screen.dart';
 
 void main() {
-  RoundHandler roundHandler = RoundHandler();
-  roundHandler.initDeck();
-  print(roundHandler.cardColumns[6][6]);
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+  );
+  SystemChrome.setEnabledSystemUIOverlays([]);
 
   runApp(MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Flutter Solitaire',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text("Hi")),
+      home: PlayScreen(),
     );
   }
 }

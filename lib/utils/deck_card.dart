@@ -1,4 +1,24 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
+class DeckCard {
+  CardSuit suit;
+  CardRank rank;
+  Key key;
+  bool faceUp;
+
+  DeckCard({
+    @required this.suit,
+    @required this.rank,
+    @required this.key,
+    this.faceUp = false,
+  });
+
+  CardColor get color =>
+      (suit == CardSuit.hearts || suit == CardSuit.diamonds) ? CardColor.red : CardColor.black;
+
+  @override
+  String toString() => "suit:${suit.string} rank:${rank.string} up:$faceUp";
+}
 
 enum CardSuit { hearts, diamonds, spades, clubs }
 
@@ -17,6 +37,8 @@ extension CardSuitMethod on CardSuit {
         return "error";
     }
   }
+
+  int get index => CardSuit.values.indexOf(this);
 }
 
 enum CardRank { ace, two, three, four, five, six, seven, eight, nine, ten, jack, queen, king }
@@ -54,29 +76,8 @@ extension CardRankMethod on CardRank {
         return "Joker";
     }
   }
+
+  int get index => CardRank.values.indexOf(this);
 }
 
 enum CardColor { red, black }
-
-class DeckCard {
-  CardSuit suit;
-  CardRank rank;
-  bool faceUp;
-
-  DeckCard({
-    @required this.suit,
-    @required this.rank,
-    this.faceUp = false,
-  });
-
-  CardColor get color {
-    if (suit == CardSuit.hearts || suit == CardSuit.diamonds) {
-      return CardColor.red;
-    } else {
-      return CardColor.black;
-    }
-  }
-
-  @override
-  String toString() => "suit:$suit rank:$rank up:$faceUp";
-}

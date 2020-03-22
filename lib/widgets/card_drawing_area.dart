@@ -11,13 +11,17 @@ class CardDrawingArea extends StatefulWidget {
   final List<DeckCard> deckClosed;
   final List<DeckCard> deckOpened;
 
-  CardDrawingArea(this.deckClosed, this.deckOpened);
+  const CardDrawingArea({
+    @required Key key,
+    @required this.deckClosed,
+    @required this.deckOpened,
+  }) : super(key: key);
 
   @override
-  _CardDrawingAreaState createState() => _CardDrawingAreaState();
+  CardDrawingAreaState createState() => CardDrawingAreaState();
 }
 
-class _CardDrawingAreaState extends State<CardDrawingArea> {
+class CardDrawingAreaState extends State<CardDrawingArea> {
   void openCard() {
     setState(() {
       widget.deckOpened.add(widget.deckClosed.removeLast()..faceUp = true);

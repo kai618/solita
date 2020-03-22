@@ -1,24 +1,17 @@
-import 'dart:math';
-
-import 'package:flutter/material.dart';
 import 'package:solitaire/utils/deck_card.dart';
 
 class CardRule {
-  static bool isCardsAcceptedToColumn(List<DeckCard> cardColumn, List<DeckCard> draggedCards) {
-    DeckCard firstDraggedCard = draggedCards.first;
-    if (cardColumn.isEmpty) {
-      if (firstDraggedCard.rank == CardRank.king) return true;
+  static bool isCardsAcceptedToColumn(List<DeckCard> toColumn, List<DeckCard> fromCards) {
+    if (toColumn.isEmpty) {
+      if (fromCards.first.rank == CardRank.king) return true;
       return false;
     }
-    DeckCard lastColumnCard = cardColumn.last;
 
     // checking the color matching
-    if (lastColumnCard.color == firstDraggedCard.color) return false;
+    if (toColumn.last.color == fromCards.first.color) return false;
 
     // checking the rank order
-    int firstDraggedCardRankIndex = CardRank.values.indexOf(firstDraggedCard.rank);
-    int lastColumnCardRankIndex = CardRank.values.indexOf(lastColumnCard.rank);
-    if (lastColumnCardRankIndex == firstDraggedCardRankIndex + 1) return true;
+    if (toColumn.last.rank.index == fromCards.first.rank.index + 1) return true;
     return false;
   }
 
@@ -28,11 +21,7 @@ class CardRule {
       if (toPile.isEmpty) {
         if (fromCards.first.rank == CardRank.ace) return true;
         return false;
-      } else {
-        int pileRankIndex = CardRank.values.indexOf(toPile.last.rank);
-        int cardRankIndex = CardRank.values.indexOf(fromCards.first.rank);
-        if (cardRankIndex == pileRankIndex + 1) return true;
-      }
+      } else if (fromCards.first.rank.index == toPile.last.rank.index + 1) return true;
     }
     return false;
   }

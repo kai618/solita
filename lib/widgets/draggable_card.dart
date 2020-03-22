@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:solitaire/utils/constant.dart';
 import 'package:solitaire/utils/deck_card.dart';
-import 'package:solitaire/widgets/facing_down_card.dart';
 import 'package:solitaire/widgets/facing_up_card.dart';
+import 'package:solitaire/widgets/flyable_card.dart';
 import 'package:solitaire/widgets/simple_card_column.dart';
 
 class DraggableCard extends StatelessWidget {
@@ -25,6 +25,7 @@ class DraggableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Draggable<Map>(
+      maxSimultaneousDrags: 1,
       child: FacingUpCard(card),
       feedback: Material(
         elevation: 3,

@@ -5,6 +5,7 @@ import 'package:solitaire/utils/deck_card.dart';
 import 'package:solitaire/widgets/card_tray.dart';
 import 'package:solitaire/widgets/draggable_card.dart';
 import 'package:solitaire/widgets/column_drag_target.dart';
+import 'package:solitaire/widgets/flyable_card.dart';
 
 import 'facing_down_card.dart';
 
@@ -41,6 +42,10 @@ class CardColumnState extends State<CardColumn> {
     setState(() => lastVisibleCardIndex = widget.cards.length - 1);
   }
 
+  void hideLastCard() {
+    setState(() => lastVisibleCardIndex = widget.cards.length - 2);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,21 +62,24 @@ class CardColumnState extends State<CardColumn> {
   List<Widget> buildDraggableCardPile() {
     return widget.cards.map((card) {
       int index = widget.cards.indexOf(card);
-      return Visibility(
-        visible: index <= lastVisibleCardIndex,
-        child: Transform.translate(
-          offset: Offset(0, index * Constant.dy),
-          child: card.faceUp
-              ? DraggableCard(
-                  card: card,
-                  index: index,
-                  columnIndex: widget.columnIndex,
-                  attachedCards: widget.cards.sublist(index),
-                  onDragStarted: onDragStarted,
-                  onDragEnd: onDragEnd,
-                )
-              : FacingDownCard(),
-        ),
+      return Transform.translate(
+        offset: Offset(0, index * Constant.dy),
+        child: card.faceUp
+            ? FlyableCard(
+                card: card,
+                child: Visibility(
+                  visible: index <= lastVisibleCardIndex,
+                  child: DraggableCard(
+                    card: card,
+                    index: index,
+                    columnIndex: widget.columnIndex,
+                    attachedCards: widget.cards.sublist(index),
+                    onDragStarted: onDragStarted,
+                    onDragEnd: onDragEnd,
+                  ),
+                ),
+              )
+            : FacingDownCard(),
       );
     }).toList();
   }

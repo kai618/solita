@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:solitaire/utils/deck_card.dart';
 
 class RoundHandler {
@@ -19,16 +20,17 @@ class RoundHandler {
     for (int i = 0; i < 4; i++) suitPiles[i] = [];
   }
 
-  void initDeck() {
-    createAllCards();
+  void initDeck(List<Key> cardKeys) {
+    createAllCards(cardKeys);
     putRandomCardsToColumns();
     putRemainingCardsToDeckRandomly();
   }
 
-  void createAllCards() {
+  void createAllCards(List<Key> cardKeys) {
+    int keyIndex = 0;
     CardSuit.values.forEach((suit) {
       CardRank.values.forEach((rank) {
-        allCards.add(DeckCard(suit: suit, rank: rank));
+        allCards.add(DeckCard(suit: suit, rank: rank, key: cardKeys[keyIndex++]));
       });
     });
   }
@@ -57,7 +59,7 @@ class RoundHandler {
       card = allCards.removeAt(ran.nextInt(allCards.length));
       deckClosed.add(card);
     }
-    deckOpened.add(allCards.first..faceUp = true);
+    deckClosed.add(allCards.removeLast());
   }
 
   void onCardsAddedToColumn(List<DeckCard> cards, int toIndex, [int fromIndex = -1]) {
@@ -73,15 +75,13 @@ class RoundHandler {
     }
   }
 
-  void onCardAddedToSuit(CardSuit suit, int from) {
-    int index = CardSuit.values.indexOf(suit);
-
+  void onCardAddedToSuit(int to, int from) {
     if (from != -1) {
       // one card added from columns
-      suitPiles[index].add(cardColumns[from].removeLast());
+      suitPiles[to].add(cardColumns[from].removeLast());
       if (cardColumns[from].isNotEmpty) cardColumns[from].last.faceUp = true;
     } else
       // one card added from drawing deck
-      suitPiles[index].add(deckOpened.removeLast());
+      suitPiles[to].add(deckOpened.removeLast());
   }
 }

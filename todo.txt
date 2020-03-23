@@ -3,4 +3,7 @@
 
 @Redo feature
 
+@Find a way to reset the screen widget from the inside.
+
 @Auto move cards to the right foundation
+    I do not understand async await clearly.

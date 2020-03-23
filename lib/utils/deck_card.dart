@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 class DeckCard {
   CardSuit suit;
   CardRank rank;
-  Key key;
+  GlobalKey key;
   bool faceUp;
 
   DeckCard({

@@ -59,6 +59,8 @@ class _PlayScreenState extends State<PlayScreen> {
 
   Future<void> flyCardToSuit(int from) async {
     final card = (from == -1) ? handler.deckOpened.last : handler.cardColumns[from].last;
+    // wait for the flyable widget to build if its state is null
+    while (card.key.currentState == null) await Future.delayed(Duration(milliseconds: 50));
     return await (card.key as GlobalKey<FlyableCardState>).currentState.flyToSuitDeck(
           onBefore: () {},
           onAfter: () {
@@ -76,8 +78,6 @@ class _PlayScreenState extends State<PlayScreen> {
     handler.initDeck(cardKeys);
     handler.initAutoCardMovingHelper();
     for (int i = 0; i < colKeys.length; i++) colKeys[i].currentState.onDragEnd();
-
-    await handler.autoHelper?.keepMovingCard(flyCardToSuit);
   }
 
   @override

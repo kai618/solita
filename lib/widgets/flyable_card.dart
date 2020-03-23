@@ -70,9 +70,9 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
     onBefore();
     _controller.forward();
 
-    Future.delayed(Duration(milliseconds: _duration.inMilliseconds - 20), onAfter);
     return await Future.delayed(_duration, () {
       entry.remove();
+      onAfter();
     });
   }
 

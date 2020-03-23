@@ -10,6 +10,7 @@ class AutoCardMovingHelper {
 
   Future keepMovingCard(Function flyCardToSuit) async {
     var indexList = findSuitablePiles();
+    print(indexList);
     while (indexList.isNotEmpty) {
       for (var index in indexList) await flyCardToSuit(index);
       indexList = findSuitablePiles();

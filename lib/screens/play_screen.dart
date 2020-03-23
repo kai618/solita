@@ -19,7 +19,7 @@ class _PlayScreenState extends State<PlayScreen> {
   RoundHandler handler = RoundHandler();
   final List<GlobalKey<CardColumnState>> colKeys = List(7);
   final List<GlobalKey<SuitPileState>> suitKeys = List(4);
-  final GlobalKey<CardDrawingAreaState> drawKey = GlobalKey();
+  final GlobalKey<CardDrawingAreaState> drawKey = GlobalKey(); // for  card drawing area
   final List<GlobalKey<FlyableCardState>> cardKeys = List(52);
 
   @override
@@ -29,40 +29,55 @@ class _PlayScreenState extends State<PlayScreen> {
     for (int i = 0; i < 52; i++) cardKeys[i] = GlobalKey();
 
     handler.initDeck(cardKeys);
+    handler.initAutoCardMovingHelper();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await handler.autoHelper?.keepMovingCard(flyCardToSuit);
+    });
     super.initState();
   }
 
-  void onCardsAddedToColumn(int from, int to, List<DeckCard> cards) {
+  void onCardsDraggedToColumn(int from, int to, List<DeckCard> cards) async {
     handler.onCardsAddedToColumn(cards, to, from);
     colKeys[to].currentState.onDragEnd();
-    drawKey.currentState.setState(() {});
+    drawKey.currentState.reRender();
+    await handler.autoHelper?.keepMovingCard(flyCardToSuit);
   }
 
-  void onCardAddedToSuit(int to, int from) {
+  void onCardDraggedToSuit(int to, int from) {
     handler.onCardAddedToSuit(to, from);
     suitKeys[to].currentState.reRender();
     if (from == -1)
-      drawKey.currentState.setState(() {});
+      drawKey.currentState.reRender();
     else
-      colKeys[from].currentState.setState(() {});
+      colKeys[from].currentState.onDragEnd();
   }
 
-  void reset() {
-    int colIndex = 6;
-    final card = handler.cardColumns[colIndex].last;
+  void onCardDrawn() async {
+    await handler.autoHelper?.keepMovingCard(flyCardToSuit);
+  }
 
-    (card.key as GlobalKey<FlyableCardState>).currentState.flyToSuitDeck(onBefore: () {
-      colKeys[colIndex].currentState.hideLastCard();
-    }, onAfter: () {
-      colKeys[colIndex].currentState.onDragEnd();
-      handler.onCardAddedToSuit(card.suit.index, colIndex);
-      suitKeys[card.suit.index].currentState.setState(() {});
+  Future<void> flyCardToSuit(int from) async {
+    final card = (from == -1) ? handler.deckOpened.last : handler.cardColumns[from].last;
+    return await (card.key as GlobalKey<FlyableCardState>).currentState.flyToSuitDeck(
+          onBefore: () {},
+          onAfter: () {
+            (from == -1) ? drawKey.currentState.reRender() : colKeys[from].currentState.onDragEnd();
+            handler.onCardAddedToSuit(card.suit.index, from);
+            suitKeys[card.suit.index].currentState.reRender();
+          },
+        );
+  }
+
+  void reset() async {
+    setState(() {
+      handler = RoundHandler();
     });
-//    setState(() {
-//      handler = RoundHandler();
-//      handler.initDeck(cardKeys);
-//      colKeys.forEach((key) => key.currentState.onDragEnd());
-//    });
+    handler.initDeck(cardKeys);
+    handler.initAutoCardMovingHelper();
+    for (int i = 0; i < colKeys.length; i++) colKeys[i].currentState.onDragEnd();
+
+    await handler.autoHelper?.keepMovingCard(flyCardToSuit);
   }
 
   @override
@@ -86,6 +101,7 @@ class _PlayScreenState extends State<PlayScreen> {
                       key: drawKey,
                       deckClosed: handler.deckClosed,
                       deckOpened: handler.deckOpened,
+                      onCardDrawn: onCardDrawn,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -94,11 +110,11 @@ class _PlayScreenState extends State<PlayScreen> {
                 ],
               ),
             ),
-            Expanded(flex: 14, child: buildCardColumnArea()),
+            Expanded(flex: 12, child: buildCardColumnArea()),
+            Expanded(flex: 2, child: buildButtons()),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: reset, child: Icon(Icons.refresh)),
     );
   }
 
@@ -112,7 +128,7 @@ class _PlayScreenState extends State<PlayScreen> {
           key: suitKeys[index],
           pile: pile,
           suit: CardSuit.values[index],
-          onCardAdded: onCardAddedToSuit,
+          onCardAdded: onCardDraggedToSuit,
         );
       }).toList(),
     );
@@ -129,10 +145,20 @@ class _PlayScreenState extends State<PlayScreen> {
             key: colKeys[index],
             cards: cards,
             columnIndex: index,
-            onCardsAdded: onCardsAddedToColumn,
+            onCardsAdded: onCardsDraggedToColumn,
           );
         },
       ).toList(),
+    );
+  }
+
+  Widget buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        RaisedButton(onPressed: this.reset, child: Text("Reset")),
+        RaisedButton(onPressed: () => this.flyCardToSuit(6), child: Text("Fly")),
+      ],
     );
   }
 }

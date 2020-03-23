@@ -1,20 +1,25 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:solitaire/utils/constant.dart';
 import 'package:solitaire/utils/deck_card.dart';
 import 'package:solitaire/widgets/card_tray.dart';
 import 'package:solitaire/widgets/facing_down_card.dart';
 import 'package:solitaire/widgets/facing_up_card.dart';
+import 'package:solitaire/widgets/flyable_card.dart';
 
 import 'draggable_card.dart';
 
 class CardDrawingArea extends StatefulWidget {
   final List<DeckCard> deckClosed;
   final List<DeckCard> deckOpened;
+  final Function onCardDrawn;
 
   const CardDrawingArea({
     @required Key key,
     @required this.deckClosed,
     @required this.deckOpened,
+    @required this.onCardDrawn,
   }) : super(key: key);
 
   @override
@@ -22,9 +27,10 @@ class CardDrawingArea extends StatefulWidget {
 }
 
 class CardDrawingAreaState extends State<CardDrawingArea> {
-  void openCard() {
+  void drawNewCard() {
     setState(() {
       widget.deckOpened.add(widget.deckClosed.removeLast()..faceUp = true);
+      Timer(Duration(milliseconds: 50), widget.onCardDrawn); // needs time to build widget
     });
   }
 
@@ -35,8 +41,14 @@ class CardDrawingAreaState extends State<CardDrawingArea> {
     });
   }
 
+  void reRender() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final deckOpened = widget.deckOpened;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -57,7 +69,7 @@ class CardDrawingAreaState extends State<CardDrawingArea> {
                     borderRadius: BorderRadius.circular(Constant.cardRadius),
                     child: FacingDownCard(),
                   ),
-                  onTap: openCard),
+                  onTap: drawNewCard),
             ),
           ],
         ),
@@ -66,15 +78,16 @@ class CardDrawingAreaState extends State<CardDrawingArea> {
           child: Stack(
             children: <Widget>[
               CardTray(),
-              widget.deckOpened.length > 1
-                  ? FacingUpCard(widget.deckOpened[widget.deckOpened.length - 2])
-                  : Container(),
-              widget.deckOpened.isNotEmpty
-                  ? DraggableCard(
-                      card: widget.deckOpened.last,
-                      attachedCards: [widget.deckOpened.last],
-                      onDragStarted: (_) {},
-                      onDragEnd: () {},
+              deckOpened.length > 1 ? FacingUpCard(deckOpened[deckOpened.length - 2]) : Container(),
+              deckOpened.isNotEmpty
+                  ? FlyableCard(
+                      card: deckOpened.last,
+                      child: DraggableCard(
+                        card: deckOpened.last,
+                        attachedCards: [deckOpened.last],
+                        onDragStarted: (_) {},
+                        onDragEnd: () {},
+                      ),
                     )
                   : Container(),
             ],

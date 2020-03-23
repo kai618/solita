@@ -42,10 +42,6 @@ class CardColumnState extends State<CardColumn> {
     setState(() => lastVisibleCardIndex = widget.cards.length - 1);
   }
 
-  void hideLastCard() {
-    setState(() => lastVisibleCardIndex = widget.cards.length - 2);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(

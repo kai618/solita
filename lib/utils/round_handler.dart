@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:solitaire/utils/auto_card_moving_helper.dart';
 import 'package:solitaire/utils/deck_card.dart';
 
 class RoundHandler {
@@ -19,6 +20,8 @@ class RoundHandler {
     for (int i = 0; i < 7; i++) cardColumns[i] = [];
     for (int i = 0; i < 4; i++) suitPiles[i] = [];
   }
+
+  AutoCardMovingHelper autoHelper;
 
   void initDeck(List<Key> cardKeys) {
     createAllCards(cardKeys);
@@ -83,5 +86,17 @@ class RoundHandler {
     } else
       // one card added from drawing deck
       suitPiles[to].add(deckOpened.removeLast());
+  }
+
+  void initAutoCardMovingHelper() {
+    autoHelper = AutoCardMovingHelper(
+      deckOpened: deckOpened,
+      columns: cardColumns,
+      suits: suitPiles,
+    );
+  }
+
+  void stopAutoCardMovingHelper() {
+    autoHelper = null;
   }
 }

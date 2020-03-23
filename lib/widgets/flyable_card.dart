@@ -25,8 +25,8 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
   Animation<Offset> _anim;
   BuildContext _context;
   Offset _selfGlobalPosition;
+  bool visible = true;
   final _duration = Duration(milliseconds: Constant.flyingTime);
-  Timer _timer;
 
   @override
   void initState() {
@@ -38,35 +38,41 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
   @override
   void dispose() {
     _controller.dispose();
-    _timer?.cancel();
     super.dispose();
   }
 
-  void flyToSuitDeck({Function onBefore, Function onAfter}) {
+  Future flyToSuitDeck({Function onBefore, Function onAfter}) async {
     OverlayState overlayState = Overlay.of(_context);
     OverlayEntry entry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: _selfGlobalPosition.dy,
-        left: _selfGlobalPosition.dx,
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) => Transform.translate(offset: _anim.value, child: child),
-          child: Material(
-            elevation: 3,
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(Constant.cardRadius),
-            child: FacingUpCard(widget.card),
+      builder: (context) => Stack(
+        children: <Widget>[
+          Container(color: Colors.transparent), // to prevent user from drag other cards
+          Positioned(
+            top: _selfGlobalPosition.dy,
+            left: _selfGlobalPosition.dx,
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) => Transform.translate(offset: _anim.value, child: child),
+              child: Material(
+                elevation: 3,
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(Constant.cardRadius),
+                child: FacingUpCard(widget.card),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
 
     overlayState.insert(entry);
+    setState(() => visible = false);
     onBefore();
     _controller.forward();
-    _timer = Timer(_duration, () {
+
+    Future.delayed(Duration(milliseconds: _duration.inMilliseconds - 20), onAfter);
+    return await Future.delayed(_duration, () {
       entry.remove();
-      onAfter();
     });
   }
 
@@ -84,6 +90,9 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
           .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutQuad));
     });
 
-    return widget.child;
+    return Visibility(
+      visible: visible,
+      child: widget.child,
+    );
   }
 }

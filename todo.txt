@@ -1,0 +1,6 @@
+
+@Save and continue feature
+
+@Redo feature
+
+@Auto move cards to the right foundation

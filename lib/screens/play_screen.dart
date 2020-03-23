@@ -31,12 +31,14 @@ class _PlayScreenState extends State<PlayScreen> {
     for (int i = 0; i < 52; i++) cardKeys[i] = GlobalKey();
 
     handler.initDeck(cardKeys);
-    handler.initAutoCardMovingHelper();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await Future.delayed(const Duration(milliseconds: 500));
-      await handler.autoHelper?.keepMovingCard(flyCardToSuit);
-    });
+    if (allowHelper) {
+      handler.initAutoCardMovingHelper();
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(const Duration(milliseconds: 500));
+        await handler.autoHelper?.keepMovingCard(flyCardToSuit);
+      });
+    }
     super.initState();
   }
 

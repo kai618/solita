@@ -46,7 +46,8 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
     OverlayEntry entry = OverlayEntry(
       builder: (context) => Stack(
         children: <Widget>[
-          Container(color: Colors.transparent), // to prevent user from drag other cards
+          Container(color: Colors.transparent),
+          // to prevent user from dragging other cards or clicking elsewhere
           Positioned(
             top: _selfGlobalPosition.dy,
             left: _selfGlobalPosition.dx,
@@ -71,8 +72,8 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
     _controller.forward();
 
     return await Future.delayed(_duration, () {
-      entry.remove();
       onAfter();
+      entry.remove();
     });
   }
 

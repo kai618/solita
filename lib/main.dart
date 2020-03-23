@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:solitaire/screens/menu_screen.dart';
 import 'package:solitaire/screens/play_screen.dart';
 
 void main() {
@@ -12,7 +13,6 @@ void main() {
   runApp(MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,12 @@ class MyApp extends StatelessWidget {
       // Klondike Solitaire
       title: 'Solita',
       theme: ThemeData(primarySwatch: Colors.green),
-      home: PlayScreen(),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => PlayScreen(),
+        MenuScreen.screenName: (context) => MenuScreen(),
+        PlayScreen.screenName: (context) => PlayScreen(),
+      },
     );
   }
 }

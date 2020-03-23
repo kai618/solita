@@ -8,11 +8,13 @@ class ColumnDragTarget extends StatelessWidget {
   final List<DeckCard> cards;
   final double dy; // the distance translated in y axis
   final Function onCardsAdded;
+  final double height;
 
   ColumnDragTarget({
     @required this.columnIndex,
     @required this.cards,
     @required this.onCardsAdded,
+    @required this.height,
     this.dy = Constant.dy,
   });
 
@@ -24,9 +26,9 @@ class ColumnDragTarget extends StatelessWidget {
         onWillAccept: (data) => CardRule.isCardsAcceptedToColumn(cards, data["cards"]),
         onAccept: (data) => onCardsAdded(data["fromColumnIndex"], columnIndex, data["cards"]),
         builder: (context, dedicates, rejects) => Container(
-          height: 120,
+          height: height,
           width: 40,
-//          color: Colors.red.withOpacity(0.5),
+//          color: Colors.red.withOpacity(0.3),
         ),
       ),
     );

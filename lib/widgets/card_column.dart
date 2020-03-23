@@ -26,27 +26,27 @@ class CardColumn extends StatefulWidget {
 }
 
 class CardColumnState extends State<CardColumn> {
-  int lastVisibleCardIndex;
+  int _lastVisibleCardIndex;
+  final double dragTargetHeight = 130;
 
   @override
   void initState() {
-    lastVisibleCardIndex = widget.cards.length - 1;
+    _lastVisibleCardIndex = widget.cards.length - 1;
     super.initState();
   }
 
   void onDragStarted(int index) {
-    setState(() => lastVisibleCardIndex = index);
+    setState(() => _lastVisibleCardIndex = index);
   }
 
   void onDragEnd() {
-    setState(() => lastVisibleCardIndex = widget.cards.length - 1);
+    setState(() => _lastVisibleCardIndex = widget.cards.length - 1);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints:
-          BoxConstraints(minHeight: (widget.cards.length - 1) * Constant.dy + Constant.cardHeight),
+      height: (widget.cards.length - 1) * Constant.dy + dragTargetHeight,
       child: Stack(children: <Widget>[
         CardTray(),
         ...buildDraggableCardPile(),
@@ -64,7 +64,7 @@ class CardColumnState extends State<CardColumn> {
             ? FlyableCard(
                 card: card,
                 child: Visibility(
-                  visible: index <= lastVisibleCardIndex,
+                  visible: index <= _lastVisibleCardIndex,
                   child: DraggableCard(
                     card: card,
                     index: index,
@@ -85,6 +85,7 @@ class CardColumnState extends State<CardColumn> {
       cards: widget.cards,
       columnIndex: widget.columnIndex,
       onCardsAdded: widget.onCardsAdded,
+      height: dragTargetHeight,
     );
   }
 }

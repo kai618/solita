@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:solitaire/utils/constant.dart';
 import 'package:solitaire/utils/deck_card.dart';
@@ -30,7 +28,9 @@ class CardDrawingAreaState extends State<CardDrawingArea> {
   void drawNewCard() {
     setState(() {
       widget.deckOpened.add(widget.deckClosed.removeLast()..faceUp = true);
-      Timer(Duration(milliseconds: 50), widget.onCardDrawn); // needs time to build widget
+//      Future.delayed(
+//          const Duration(milliseconds: 50), widget.onCardDrawn); // needs time to build widget
+      widget.onCardDrawn();
     });
   }
 
@@ -43,6 +43,7 @@ class CardDrawingAreaState extends State<CardDrawingArea> {
 
   void reRender() {
     setState(() {});
+    widget.onCardDrawn();
   }
 
   @override

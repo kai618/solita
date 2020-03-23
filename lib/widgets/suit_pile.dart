@@ -42,7 +42,7 @@ class SuitPileState extends State<SuitPile> {
                 CardRule.isCardsAcceptedToSuit(widget.suit, widget.pile, data["cards"]),
             onAccept: (data) => widget.onCardAdded(widget.suit.index, data["fromColumnIndex"]),
             builder: (context, dedicates, rejects) => Container(
-                //               color: Colors.red.withOpacity(0.3),
+//                               color: Colors.red.withOpacity(0.3),
                 height: 80,
                 width: 50),
           ),

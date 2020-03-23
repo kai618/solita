@@ -22,6 +22,8 @@ class _PlayScreenState extends State<PlayScreen> {
   final GlobalKey<CardDrawingAreaState> drawKey = GlobalKey(); // for  card drawing area
   final List<GlobalKey<FlyableCardState>> cardKeys = List(52);
 
+  bool allowHelper = true;
+
   @override
   void initState() {
     for (int i = 0; i < 7; i++) colKeys[i] = GlobalKey();
@@ -32,9 +34,15 @@ class _PlayScreenState extends State<PlayScreen> {
     handler.initAutoCardMovingHelper();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 500));
       await handler.autoHelper?.keepMovingCard(flyCardToSuit);
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void onCardsDraggedToColumn(int from, int to, List<DeckCard> cards) async {
@@ -60,24 +68,30 @@ class _PlayScreenState extends State<PlayScreen> {
   Future<void> flyCardToSuit(int from) async {
     final card = (from == -1) ? handler.deckOpened.last : handler.cardColumns[from].last;
     // wait for the flyable widget to build if its state is null
-    while (card.key.currentState == null) await Future.delayed(Duration(milliseconds: 50));
+    while (card.key.currentState == null) await Future.delayed(Duration(milliseconds: 30));
     return await (card.key as GlobalKey<FlyableCardState>).currentState.flyToSuitDeck(
           onBefore: () {},
           onAfter: () {
-            (from == -1) ? drawKey.currentState.reRender() : colKeys[from].currentState.onDragEnd();
             handler.onCardAddedToSuit(card.suit.index, from);
+            (from == -1) ? drawKey.currentState.reRender() : colKeys[from].currentState.onDragEnd();
             suitKeys[card.suit.index].currentState.reRender();
           },
         );
   }
 
-  void reset() async {
+  void reset(context) async {
+    Navigator.of(context).pushReplacementNamed(PlayScreen.screenName);
+  }
+
+  void switchAutoHelper() {
     setState(() {
-      handler = RoundHandler();
+      allowHelper = !allowHelper;
     });
-    handler.initDeck(cardKeys);
-    handler.initAutoCardMovingHelper();
-    for (int i = 0; i < colKeys.length; i++) colKeys[i].currentState.onDragEnd();
+    if (allowHelper) {
+      handler.initAutoCardMovingHelper();
+      handler.autoHelper.keepMovingCard(flyCardToSuit);
+    } else
+      handler.disposeAutoCardMovingHelper();
   }
 
   @override
@@ -111,7 +125,7 @@ class _PlayScreenState extends State<PlayScreen> {
               ),
             ),
             Expanded(flex: 12, child: buildCardColumnArea()),
-            Expanded(flex: 2, child: buildButtons()),
+            Expanded(flex: 2, child: buildButtons(context)),
           ],
         ),
       ),
@@ -152,12 +166,15 @@ class _PlayScreenState extends State<PlayScreen> {
     );
   }
 
-  Widget buildButtons() {
+  Widget buildButtons(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        RaisedButton(onPressed: this.reset, child: Text("Reset")),
-        RaisedButton(onPressed: () => this.flyCardToSuit(6), child: Text("Fly")),
+        RaisedButton(onPressed: () => reset(context), child: Text("Reset")),
+        IconButton(
+          icon: Icon(allowHelper ? Icons.gps_fixed : Icons.gps_off),
+          onPressed: () => this.switchAutoHelper(),
+        ),
       ],
     );
   }

@@ -79,17 +79,17 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
   @override
   Widget build(BuildContext context) {
     this._context = context;
-    final suitGlobalPosition = Provider.of<SuitGlobalPosition>(context).get(widget.card.suit);
+    final suitGlobalPosition =
+        Provider.of<SuitGlobalPosition>(_context, listen: false).get(widget.card.suit);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final RenderBox box = context.findRenderObject();
+      final RenderBox box = _context.findRenderObject();
       final suitLocalPosition = box.globalToLocal(suitGlobalPosition);
       _selfGlobalPosition = box.localToGlobal(Offset.zero);
 
       _anim = Tween(begin: Offset.zero, end: suitLocalPosition)
           .animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutQuad));
     });
-
     return Visibility(
       visible: visible,
       child: widget.child,

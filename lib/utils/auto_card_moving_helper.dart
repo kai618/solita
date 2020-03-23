@@ -5,16 +5,19 @@ class AutoCardMovingHelper {
   final List<DeckCard> deckOpened;
   List<List<DeckCard>> columns;
   List<List<DeckCard>> suits;
+  bool _allowed = true;
 
   AutoCardMovingHelper({this.deckOpened, this.columns, this.suits});
 
+  void turnOn() => _allowed = true;
+
+  void turnOff() => _allowed = false;
+
   Future keepMovingCard(Function flyCardToSuit) async {
     var indexList = findSuitablePiles();
-    print(indexList);
-    while (indexList.isNotEmpty) {
+    while (indexList.isNotEmpty && _allowed) {
       for (var index in indexList) await flyCardToSuit(index);
       indexList = findSuitablePiles();
-      print(indexList);
     }
   }
 

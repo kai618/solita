@@ -16,12 +16,12 @@ class RoundHandler {
   // 4 final suits
   List<List<DeckCard>> suitPiles = List(4);
 
+  AutoCardMovingHelper autoHelper;
+
   RoundHandler() {
     for (int i = 0; i < 7; i++) cardColumns[i] = [];
     for (int i = 0; i < 4; i++) suitPiles[i] = [];
   }
-
-  AutoCardMovingHelper autoHelper;
 
   void initDeck(List<Key> cardKeys) {
     createAllCards(cardKeys);
@@ -96,7 +96,8 @@ class RoundHandler {
     );
   }
 
-  void stopAutoCardMovingHelper() {
+  void disposeAutoCardMovingHelper() {
+    autoHelper.turnOff();
     autoHelper = null;
   }
 }

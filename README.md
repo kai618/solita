@@ -1,16 +1,7 @@
-# solitaire
+# Solita
 
-A solitaire game with Flutter.
+A Klondike (Solitaire) game I made in my spare time, tried to learn and apply Draggable and DragTarget widgets of Flutter at first, then polished it with some auto-drag animation to ease some lazy player.
+It is now playable but many more features are still incomplete. I will continue this project soon when I can find some free time.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Game Demo
+![Screen Demo](https://github.com/kai618/solita/blob/master/assets/demo/solita_0.5.gif)

@@ -1,6 +1,6 @@
 # Solita
 
-A Klondike (Solitaire) game I made in my spare time, tried to learn and apply Draggable and DragTarget widgets of Flutter at first, then polished it with some auto-drag animation to ease some lazy player.
+A Klondike (Solitaire) game I made in my spare time, tried to learn and apply Draggable and DragTarget widgets of Flutter at first, then polished it with some auto-drag animation to ease some lazy player.  
 It is now playable but many more features are still incomplete. I will continue this project soon when I can find some free time.
 
 ## Game Demo

@@ -7,3 +7,11 @@
 
 @Auto move cards to the right foundation
     I do not understand async await clearly.
+	Fix: After moving a cards from one column to foundations, moved card changes to the final card of the column.
+	Error: If the column has only one card, app crashes after moving.
+
+@Use one list to store deckOpened and deckClosed
+
+@Change data of Draggable to a map storing deckArea and index
+
+@Able t drag cards from suit back to columns

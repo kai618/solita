@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:solitaire/utils/auto_card_moving_helper.dart';
+import 'package:solitaire/utils/card_rule.dart';
 import 'package:solitaire/utils/deck_card.dart';
 
 class RoundHandler {
@@ -16,11 +16,13 @@ class RoundHandler {
   // 4 final suits
   List<List<DeckCard>> suitPiles = List(4);
 
-  AutoCardMovingHelper autoHelper;
+  bool autoAllowed;
 
   RoundHandler() {
     for (int i = 0; i < 7; i++) cardColumns[i] = [];
     for (int i = 0; i < 4; i++) suitPiles[i] = [];
+
+    autoAllowed = true; // get from settings
   }
 
   void initDeck(List<Key> cardKeys) {
@@ -88,16 +90,39 @@ class RoundHandler {
       suitPiles[to].add(deckOpened.removeLast());
   }
 
-  void initAutoCardMovingHelper() {
-    autoHelper = AutoCardMovingHelper(
-      deckOpened: deckOpened,
-      columns: cardColumns,
-      suits: suitPiles,
-    );
+  void stopAutoCardMovingHelper() {
+    autoAllowed = false;
   }
 
-  void disposeAutoCardMovingHelper() {
-    autoHelper.turnOff();
-    autoHelper = null;
+  // code for auto card moving
+  Future<void> keepMovingCard(Function flyCardToSuit) async {
+    if (!autoAllowed) return;
+
+    var toFromList = findSuitablePiles();
+    print(toFromList);
+    while (toFromList.isNotEmpty && autoAllowed) {
+      for (var toFrom in toFromList) {
+        await flyCardToSuit(toFrom["from"]);
+        onCardAddedToSuit(toFrom["to"], toFrom["from"]);
+      }
+      toFromList = findSuitablePiles();
+    }
+  }
+
+  List<Map<String, int>> findSuitablePiles() {
+    List<Map<String, int>> toFromList = [];
+    if (deckOpened.isNotEmpty) {
+      DeckCard card = deckOpened.last;
+      if (CardRule.isCardsAcceptedToSuit(card.suit, suitPiles[card.suit.index], [card]))
+        toFromList.add({"to": card.suit.index, "from": -1});
+    }
+
+    for (int i = 0; i < 7; i++) {
+      if (cardColumns[i].isEmpty) continue;
+      DeckCard card = cardColumns[i].last;
+      if (CardRule.isCardsAcceptedToSuit(card.suit, suitPiles[card.suit.index], [card]))
+        toFromList.add({"to": card.suit.index, "from": i});
+    }
+    return toFromList;
   }
 }

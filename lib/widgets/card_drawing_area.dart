@@ -43,7 +43,6 @@ class CardDrawingAreaState extends State<CardDrawingArea> {
 
   void reRender() {
     setState(() {});
-    widget.onCardDrawn();
   }
 
   @override

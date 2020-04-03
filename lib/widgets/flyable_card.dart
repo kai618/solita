@@ -41,7 +41,7 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
     super.dispose();
   }
 
-  Future flyToSuitDeck({Function onBefore, Function onAfter}) async {
+  Future flyToSuitDeck({Function onAfter}) async {
     OverlayState overlayState = Overlay.of(_context);
     OverlayEntry entry = OverlayEntry(
       builder: (context) => Stack(
@@ -68,7 +68,6 @@ class FlyableCardState extends State<FlyableCard> with SingleTickerProviderState
 
     overlayState.insert(entry);
     setState(() => visible = false);
-    onBefore();
     _controller.forward();
 
     return await Future.delayed(_duration, () {

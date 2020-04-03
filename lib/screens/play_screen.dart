@@ -22,23 +22,22 @@ class _PlayScreenState extends State<PlayScreen> {
   final GlobalKey<CardDrawingAreaState> drawKey = GlobalKey(); // for  card drawing area
   final List<GlobalKey<FlyableCardState>> cardKeys = List(52);
 
-  bool allowHelper = true;
-
   @override
   void initState() {
-    for (int i = 0; i < 7; i++) colKeys[i] = GlobalKey();
-    for (int i = 0; i < 4; i++) suitKeys[i] = GlobalKey();
-    for (int i = 0; i < 52; i++) cardKeys[i] = GlobalKey();
+    for (int i = 0; i < 7; i++)
+      colKeys[i] = GlobalKey();
+    for (int i = 0; i < 4; i++)
+      suitKeys[i] = GlobalKey();
+    for (int i = 0; i < 52; i++)
+      cardKeys[i] = GlobalKey();
 
     handler.initDeck(cardKeys);
 
-    if (allowHelper) {
-      handler.initAutoCardMovingHelper();
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await Future.delayed(const Duration(milliseconds: 500));
-        await handler.autoHelper?.keepMovingCard(flyCardToSuit);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 500));
+      await handler.keepMovingCard(flyCardToSuit);
+    });
+
     super.initState();
   }
 
@@ -51,7 +50,7 @@ class _PlayScreenState extends State<PlayScreen> {
     handler.onCardsAddedToColumn(cards, to, from);
     colKeys[to].currentState.onDragEnd();
     drawKey.currentState.reRender();
-    await handler.autoHelper?.keepMovingCard(flyCardToSuit);
+    await handler.keepMovingCard(flyCardToSuit);
   }
 
   void onCardDraggedToSuit(int to, int from) {
@@ -64,7 +63,7 @@ class _PlayScreenState extends State<PlayScreen> {
   }
 
   void onCardDrawn() async {
-    await handler.autoHelper?.keepMovingCard(flyCardToSuit);
+    await handler.keepMovingCard(flyCardToSuit);
   }
 
   Future<void> flyCardToSuit(int from) async {
@@ -72,13 +71,11 @@ class _PlayScreenState extends State<PlayScreen> {
     // wait for the flyable widget to build if its state is null
     while (card.key.currentState == null) await Future.delayed(Duration(milliseconds: 30));
     return await (card.key as GlobalKey<FlyableCardState>).currentState.flyToSuitDeck(
-          onBefore: () {},
-          onAfter: () {
-            handler.onCardAddedToSuit(card.suit.index, from);
-            (from == -1) ? drawKey.currentState.reRender() : colKeys[from].currentState.onDragEnd();
-            suitKeys[card.suit.index].currentState.reRender();
-          },
-        );
+      onAfter: () {
+        (from == -1) ? drawKey.currentState.reRender() : colKeys[from].currentState.onDragEnd();
+        suitKeys[card.suit.index].currentState.reRender();
+      },
+    );
   }
 
   void reset(context) async {
@@ -87,19 +84,19 @@ class _PlayScreenState extends State<PlayScreen> {
 
   void switchAutoHelper() {
     setState(() {
-      allowHelper = !allowHelper;
+      handler.autoAllowed = !handler.autoAllowed;
     });
-    if (allowHelper) {
-      handler.initAutoCardMovingHelper();
-      handler.autoHelper.keepMovingCard(flyCardToSuit);
-    } else
-      handler.disposeAutoCardMovingHelper();
+    if (handler.autoAllowed) {
+      handler.keepMovingCard(flyCardToSuit);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme
+          .of(context)
+          .backgroundColor,
       body: ChangeNotifierProvider(
         create: (_) => SuitGlobalPosition(),
         child: Column(
@@ -155,7 +152,7 @@ class _PlayScreenState extends State<PlayScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: handler.cardColumns.map(
-        (cards) {
+            (cards) {
           int index = handler.cardColumns.indexOf(cards);
           return CardColumn(
             key: colKeys[index],
@@ -174,7 +171,7 @@ class _PlayScreenState extends State<PlayScreen> {
       children: <Widget>[
         RaisedButton(onPressed: () => reset(context), child: Text("Reset")),
         IconButton(
-          icon: Icon(allowHelper ? Icons.gps_fixed : Icons.gps_off),
+          icon: Icon(handler.autoAllowed ? Icons.gps_fixed : Icons.gps_off),
           onPressed: () => this.switchAutoHelper(),
         ),
       ],
